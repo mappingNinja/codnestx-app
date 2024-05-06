@@ -1,31 +1,35 @@
-import React, { useContext, useEffect, useState } from 'react'
-import AddProductModal from '../../modals/AddProductModal'
-import { useDispatch, useSelector } from 'react-redux'
-import Swal from 'sweetalert2';
-import moment from 'moment';
+import React, { useContext, useEffect, useState } from "react";
+import AddProductModal from "../../modals/AddProductModal";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import moment from "moment";
 
-import { deleteProductAction, getProductsAction } from '../../../redux/actions/productAction';
-import EditProductModal from '../../modals/EditProductModal';
-import authContext from '../../../context/authContext/authContext';
+import {
+  deleteProductAction,
+  getProductsAction,
+} from "../../../redux/actions/productAction";
+import EditProductModal from "../../modals/EditProductModal";
+import authContext from "../../../context/authContext/authContext";
 
 const Admin = () => {
   const dispatch = useDispatch();
   const { getConfig } = useContext(authContext);
 
-  const intialState = { products: [] }
-  const [state, setCompleteState] = useState(intialState)
-  const setState = (newState) => setCompleteState((prevState) => ({ ...prevState, ...newState }));
+  const intialState = { products: [] };
+  const [state, setCompleteState] = useState(intialState);
+  const setState = (newState) =>
+    setCompleteState((prevState) => ({ ...prevState, ...newState }));
 
   const getProducts = () => {
-    const config = getConfig()
-    dispatch(getProductsAction(config))
-  }
+    const config = getConfig();
+    dispatch(getProductsAction(config));
+  };
 
   useEffect(() => {
     getProducts();
-  }, [])
+  }, []);
 
-  const deletePartner = (id) => {
+  const deleteProduct = (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -33,43 +37,45 @@ const Admin = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-      showCancelButton: true
+      showCancelButton: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        confirmDeletePartner(id);
+        confirmDeleteProduct(id);
       }
     });
-  }
+  };
 
-  const confirmDeletePartner = async (id) => {
-    const data = { id }
+  const confirmDeleteProduct = async (id) => {
+    const data = { id };
     const config = getConfig();
-    dispatch(deleteProductAction(data, config, getProducts))
-  }
+    dispatch(deleteProductAction(data, config, getProducts));
+  };
 
-
-  const { loading, products } = useSelector((state) => state.products)
+  const { loading, products } = useSelector((state) => state.products);
   return (
-    <div className='mt-5 pt-5'>
-      <div className='container'>
+    <div className="mt-5 pt-5">
+      <div className="container">
         {loading ? (
-          <div className='text-center mb-3'>
+          <div className="text-center mb-3">
             <div class="spinner-border text-primary" role="status" />
           </div>
         ) : null}
         <div class="card">
-
           <div class="card-header">
-            <div className='d-flex align-items-center justify-content-between'>
-              <div><strong>Products</strong></div>
+            <div className="d-flex align-items-center justify-content-between">
               <div>
-                <button className='btn btn-primary' onClick={() => setState({ openAddProductModal: true })}>
+                <strong>Products</strong>
+              </div>
+              <div>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setState({ openAddProductModal: true })}
+                >
                   Add Product
                 </button>
               </div>
             </div>
           </div>
-
 
           <div class="card-body">
             <table class="table table-hover">
@@ -85,22 +91,43 @@ const Admin = () => {
               </thead>
               <tbody>
                 {(products || []).map((product, index) => {
-                  const { _id, name, note, image, updatedAt } = product
+                  const { _id, name, note, image, updatedAt } = product;
                   return (
                     <tr key={_id}>
                       <th>{index + 1}</th>
                       <td>
-                        <img src={image} className='img-product' alt="img-product" />
+                        <img
+                          src={image}
+                          className="img-product"
+                          alt="img-product"
+                        />
                       </td>
                       <td>{name}</td>
                       <td>{note}</td>
-                      <td>{moment(updatedAt).format("dddd, MMMM Do YYYY, h:mm a")}</td>
                       <td>
-                        <button className='btn btn-secondary mx-1 my-1' onClick={() => setState({ productId: _id, openEditProductModal: true })}><i className='fa fa-pencil' /></button>
-                        <button className='btn btn-danger mx-1 my-1' onClick={() => deletePartner(_id)}><i className='fa fa-trash' /></button>
+                        {moment(updatedAt).format("dddd, MMMM Do YYYY, h:mm a")}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-secondary mx-1 my-1"
+                          onClick={() =>
+                            setState({
+                              productId: _id,
+                              openEditProductModal: true,
+                            })
+                          }
+                        >
+                          <i className="fa fa-pencil" />
+                        </button>
+                        <button
+                          className="btn btn-danger mx-1 my-1"
+                          onClick={() => deleteProduct(_id)}
+                        >
+                          <i className="fa fa-trash" />
+                        </button>
                       </td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>
@@ -123,8 +150,8 @@ const Admin = () => {
         productId={state.productId}
         products={products || []}
       />
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-export default Admin
+export default Admin;
