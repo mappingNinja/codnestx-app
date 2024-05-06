@@ -1,0 +1,28 @@
+.img-product {
+  height: 50px;
+  width: 100px;
+  object-fit: contain;
+}
+
+.img-product-card {
+  height: 100px;
+  width: 100px;
+  object-fit: contain;
+}
+
+.img-product-page {
+  height: 200px;
+  width: 200px;
+}
+
+.tox-statusbar__branding {
+  display: none;
+}
+
+.page-login {
+  width: 30%;
+} 
+
+.page-register {
+  width: 40%;
+}
